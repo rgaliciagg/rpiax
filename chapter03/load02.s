@@ -1,0 +1,40 @@
+/* -- load02.s */
+
+/* -- Data section */
+.data
+
+/* Ensure variable is 4-byte aligned */
+.balign 4
+/* Define storage for myvax1 */
+myvax1:
+    /* Contents of myvax1 is just '3' */
+    .word 3
+
+/* Ensure variable is 4-byte aligned */
+.balign 4
+/* Define storage for myvax2 */
+myvax2:
+    /* Contents of myvax2 is just '3' */
+    .word 4
+
+/* -- Code section */
+.text
+
+/* Ensure function section starts 4 byte aligned */
+.balign 4
+.global main
+main:
+    ldr x1, .Laddr_of_myvax1 /* x1 ← &myvax1 */
+    ldr x1, [x1]           /* x1 ← *x1 */
+    ldr x2, .Laddr_of_myvax2 /* x2 ← &myvax2 */
+    ldr x2, [x2]           /* x1 ← *x2 */
+    add x0, x1, x2
+    
+//  mov    x0, 42    
+    mov    x8, 93     // sys_exit is syscall 93 
+    svc    0          // invoke syscall 
+
+
+/* Labels needed to access data */
+.Laddr_of_myvax1 : .word myvax1
+.Laddr_of_myvax2 : .word myvax2
